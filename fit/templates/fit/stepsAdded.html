@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block title %}
+    <title>Fit application</title>
+    {% endblock %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'fit/appStyle.css'%}">
+</head>
+<body>
+    {% block content %}
+        <div class="container1">
+            <h1 class="titles">Congratulations. You successfully added {{ steps.number_of_steps }} steps for date {{ date.date }}.</h1>
+            <a href="{% url 'fit:index' %}" id="button3" class="buttons">Return to Main Page</a>
+        </div>
+    {% endblock %}
+</body>

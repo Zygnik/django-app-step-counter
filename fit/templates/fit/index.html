@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block title %}
+    <title>Fit application</title>
+    {% endblock %}
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <!-- Import Date Picker library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <!-- Import local css and js files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'fit/appStyle.css'%}">
+    <script src="{% static 'fit/fitFuncs.js' %}"></script>
+</head>
+<body>
+    {% block content %}
+    <!-- Mainpage elements -->
+    <div class="container1">
+        <h1 class="titles">
+            Welcome to fit application. Please select one of the two options.
+        </h1>
+        <a href="#" id="button1" class="buttons" onclick='overlay()'>Add steps</a>
+        <a href="#" id="button2" class="buttons" onclick='overlay2()'>View steps</a>
+    </div>
+    <!-- Popup window code for adding steps on a specific date. -->
+    <div id="box1" class="selectDateBox">
+        <h1 class="titles">Select Date</h1>
+        <form action="{% url 'fit:stepsAdded'%}" method="post">
+            {% csrf_token %}
+            <div class="inputDate" >
+                <label>Date</label>
+                <input type="text" name="dateValue" id="input1" class="inputField" size="12" required="" autocomplete="off">
+                <label>Number of steps</label>
+                <input type="number" name="numberValue" id="input2" class="inputField" size="12" required="" autocomplete="off">
+            </div>
+            <div class="optionButtons">
+                <input id="submit1" type="submit" class="buttons" value="Submit">
+                <a href='#' id="button4" class="buttons" onclick='overlay()'>close</a>
+            </div>
+            <script>
+                $(function () {
+                    $('#input1').daterangepicker({
+                        singleDatePicker: true,
+                        locale: {
+                            format: 'DD/MM/YYYY'
+                        }
+                    });
+                });
+            </script>
+        </form>
+    </div>
+    <!-- 2nd Popup window for selecting date range and show steps for each date. -->
+    <div id="box2" class="selectDateBox">
+        <h1 class="titles">Select Date Range</h1>
+        <form action="{% url 'fit:results'%}" method="post">
+            {% csrf_token %}
+            <div class="inputDate" >
+                <label>Date from/to</label>
+                <input type="text" name="dateRange" id="input3" class="inputField" size="20" required="" autocomplete="off">
+            </div>
+            <div class="optionButtons">
+                <input id="submit2" type="submit" class="buttons" value="Submit">
+                <a href='#' id="button5" class="buttons" onclick='overlay2()'>close</a>
+            </div>
+            <script>
+                $(function () {
+                    $('#input3').daterangepicker({
+                        locale: {
+                            format: 'DD/MM/YYYY'
+                        }
+                    });
+                });
+            </script>
+        </form>
+    </div>
+    {% endblock %}
+</body>
+</html>

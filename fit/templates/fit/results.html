@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block title %}
+    <title>Fit application</title>
+    {% endblock %}
+    {% load static %}
+    <!-- Functions for adding given data to js variables -->
+    <script>
+        var dates = [];
+        var totalSteps = [];
+        function addDate(date){
+            dates.push(date);
+        }
+        function addSteps(steps){
+            totalSteps.push(steps);
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'fit/appStyle.css'%}">
+</head>
+<body>
+    {% block content %}
+        <div class="container1">
+            <h1 class="titles">The following chart shows the total everyday steps for the range you gave.</h1>
+            <div id="chartContainer">
+                <canvas id="myChart"></canvas>
+            </div>
+            <!-- Import Chart js library -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+            <!-- Check if data exist on context['dates'] object from views.py -->
+            {% if dates %}
+                {% for date in dates %}
+                <!-- Add existing dates to js variable -->
+                <script>
+                    addDate("{{ date.date }}")
+                </script>
+                {% endfor %}
+                <!-- Check if data exist on context['stepsRange'] object from views.py -->
+                {% if stepsRange %}
+                    {% for steps in stepsRange %}
+                    <!-- Add existing steps to js variable -->
+                    <script>
+                        addSteps("{{ steps }}")
+                    </script>
+                    {% endfor %}
+                    <!-- Create chart and fill data with dates and totalSteps js variables defined on head html document-->
+                    <script>
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: dates,
+                                datasets: [{
+                                    label: 'Total steps per each date',
+                                    data: totalSteps
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                            }
+                        });
+                    </script>
+                {% else %}
+                    <p class="errors">No data are available.</p>
+                {% endif %}
+            {% else %}
+                <p class="erros">No data are available.</p>
+            {% endif %}
+            <a href="{% url 'fit:index' %}" id="button3" class="buttons">Return to Main Page</a>
+        </div>
+    {% endblock %}
+</body>
